@@ -58,7 +58,7 @@ jobs:
         run: |
           VERSION='${{ steps.version.outputs.version }}'
           mkdir -p package/ForeverDPS
-          cp ForeverDPS.toc ForeverDPS_Camelot.toc Core.lua README.md CHANGELOG.md package/ForeverDPS/
+          cp ForeverDPS.toc ForeverDPS_Camelot.toc *.lua README.md CHANGELOG.md package/ForeverDPS/
           cd package
           zip -r "../ForeverDPS-v${VERSION}.zip" ForeverDPS
 
