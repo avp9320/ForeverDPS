@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2 - 2026-11-01
+
+- Replaced the generic flat meter frame with Blizzard tooltip-frame artwork.
+- Standardized the title, footer, border, and background around stock WoW fonts and colors.
+- Kept the class-colored DPS bars and all meter behavior unchanged.
+
+## 0.1.1 - 2026-11-01
+
+- Added shared `/foreverdebug` diagnostics for launch-day compatibility testing.
+
 ## 0.1.0 - 2026-11-01
 
 Initial pre-launch build.
