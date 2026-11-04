@@ -1,4 +1,4 @@
-# Forever DPS v0.1.0
+# Forever DPS v0.1.4
 
 A deliberately simple DPS meter for **World of Warcraft: Forever**.
 
@@ -9,10 +9,10 @@ The goal is not to replace a full combat-analysis suite. Forever DPS answers one
 ## What it shows
 
 - Live DPS ranking from Forever's server-side `C_DamageMeter` data.
-- Class-colored bars.
+- Class-colored bars with legible light labels.
 - Your own row highlighted.
-- A persistent `YOU: #x / y` readout during combat.
-- After combat: your DPS and your percentage of the #1 player's DPS.
+- A `YOU: #x/y` ranking only when there are at least two damage sources; a simpler solo DPS row.
+- After group combat: your DPS and your percentage of the #1 player's DPS; solo combat omits meaningless rank percentages.
 - `Current` and `Overall` views.
 - In groups with more than 10 damage dealers, the top 9 plus your row if you are outside the top 10.
 
@@ -68,9 +68,9 @@ Forever's pre-launch client reports Interface `16001`; both standard and `_Camel
 
 WoW: Forever blocks third-party addons from using the traditional combat log. Forever DPS instead reads Blizzard's server-side `C_DamageMeter` API. During combat, some returned values are protected/secret, so Forever DPS displays what the client permits live and waits until combat ends before doing comparison math.
 
-## Pre-launch status
+## Launch-day status
 
-v0.1.0 is a **pre-launch build** prepared for the Forever launch on November 4, 2026. The API behavior cannot be fully verified until the live client is available. The first live test should confirm:
+v0.1.4 includes a first-pass layout cleanup based on the live Forever client, but the new visual layout still requires in-game verification. Verify:
 
 1. The addon loads without Lua errors.
 2. Player names/ranks populate during group combat.

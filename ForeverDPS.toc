@@ -2,7 +2,7 @@
 ## Title: Forever DPS
 ## Notes: A simple at-a-glance DPS ranking meter for World of Warcraft: Forever.
 ## Author: Andy + ChatGPT
-## Version: 0.1.3
+## Version: 0.1.4
 ## SavedVariables: ForeverDPSDB
 
 Core.lua

@@ -153,40 +153,41 @@ end
 
 local function CreateRow(parent, index)
     local row = CreateFrame("Frame", nil, parent)
-    row:SetHeight(21)
-    row:SetPoint("TOPLEFT", parent, "TOPLEFT", 8, -36 - ((index - 1) * 23))
-    row:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -8, -36 - ((index - 1) * 23))
+    row:SetHeight(18)
+    row:SetPoint("TOPLEFT", parent, "TOPLEFT", 7, -29 - ((index - 1) * 21))
+    row:SetPoint("TOPRIGHT", parent, "TOPRIGHT", -7, -29 - ((index - 1) * 21))
 
     row.bar = CreateFrame("StatusBar", nil, row)
     row.bar:SetAllPoints()
-    row.bar:SetStatusBarTexture("Interface\\TargetingFrame\\UI-StatusBar")
+    row.bar:SetStatusBarTexture("Interface\\Buttons\\WHITE8X8")
     row.bar:SetMinMaxValues(0, 1)
     row.bar:SetValue(0)
 
     row.barBG = row:CreateTexture(nil, "BACKGROUND")
     row.barBG:SetAllPoints()
-    row.barBG:SetColorTexture(0.08, 0.08, 0.08, 0.92)
+    row.barBG:SetColorTexture(0.10, 0.10, 0.12, 0.78)
 
     row.you = row:CreateTexture(nil, "BORDER")
-    row.you:SetPoint("TOPLEFT", -1, 1)
-    row.you:SetPoint("BOTTOMRIGHT", 1, -1)
-    row.you:SetColorTexture(1, 0.82, 0.12, 0.24)
+    row.you:SetPoint("TOPLEFT", 0, 0)
+    row.you:SetPoint("BOTTOMLEFT", 0, 0)
+    row.you:SetWidth(3)
+    row.you:SetColorTexture(1, 0.82, 0.20, 0.95)
     row.you:Hide()
 
     row.rank = row:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
-    row.rank:SetPoint("LEFT", row, "LEFT", 5, 0)
-    row.rank:SetWidth(26)
+    row.rank:SetPoint("LEFT", row, "LEFT", 6, 0)
+    row.rank:SetWidth(19)
     row.rank:SetJustifyH("LEFT")
     row.rank:SetTextColor(0.88, 0.88, 0.88)
 
     row.name = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     row.name:SetPoint("LEFT", row.rank, "RIGHT", 1, 0)
-    row.name:SetPoint("RIGHT", row, "RIGHT", -80, 0)
+    row.name:SetPoint("RIGHT", row, "RIGHT", -66, 0)
     row.name:SetJustifyH("LEFT")
 
     row.value = row:CreateFontString(nil, "OVERLAY", "GameFontNormal")
     row.value:SetPoint("RIGHT", row, "RIGHT", -5, 0)
-    row.value:SetWidth(72)
+    row.value:SetWidth(60)
     row.value:SetJustifyH("RIGHT")
     row.value:SetTextColor(1, 1, 1)
 
@@ -217,7 +218,7 @@ local function CreateUI()
 
     local db = DB()
     UI = CreateFrame("Frame", "ForeverDPSFrame", UIParent, "BackdropTemplate")
-    UI:SetSize(285, 92)
+    UI:SetSize(252, 54)
     UI:SetScale(db.scale)
     UI:SetPoint(db.point, UIParent, db.relativePoint, db.x, db.y)
     UI:SetMovable(true)
@@ -225,12 +226,12 @@ local function CreateUI()
     UI:EnableMouse(true)
     UI:RegisterForDrag("LeftButton")
     UI:SetBackdrop({
-        bgFile = "Interface\\Buttons\\WHITE8x8",
-        edgeFile = "Interface\\Buttons\\WHITE8x8",
+        bgFile = "Interface\\Buttons\\WHITE8X8",
+        edgeFile = "Interface\\Buttons\\WHITE8X8",
         edgeSize = 1,
     })
-    UI:SetBackdropColor(0.025, 0.025, 0.035, 0.93)
-    UI:SetBackdropBorderColor(0.22, 0.22, 0.28, 1)
+    UI:SetBackdropColor(0.02, 0.02, 0.025, 0.74)
+    UI:SetBackdropBorderColor(0.20, 0.20, 0.24, 0.70)
 
     UI:SetScript("OnDragStart", function(self)
         if not DB().locked then
@@ -243,18 +244,26 @@ local function CreateUI()
         SavePosition()
     end)
 
-    UI.title = UI:CreateFontString(nil, "OVERLAY", "GameFontNormalLarge")
-    UI.title:SetPoint("TOPLEFT", UI, "TOPLEFT", 9, -8)
-    UI.title:SetText("Forever DPS")
+    UI.title = UI:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+    UI.title:SetPoint("TOPLEFT", UI, "TOPLEFT", 8, -7)
+    UI.title:SetText("DPS")
+    UI.title:SetTextColor(0.95, 0.83, 0.50)
 
     UI.lockText = UI:CreateFontString(nil, "OVERLAY", "GameFontDisableSmall")
     UI.lockText:SetPoint("LEFT", UI.title, "RIGHT", 7, 0)
     UI.lockText:SetText(db.locked and "LOCKED" or "")
 
-    UI.modeButton = CreateFrame("Button", nil, UI, "UIPanelButtonTemplate")
-    UI.modeButton:SetSize(68, 20)
-    UI.modeButton:SetPoint("TOPRIGHT", UI, "TOPRIGHT", -8, -6)
+    UI.modeButton = CreateFrame("Button", nil, UI)
+    UI.modeButton:SetSize(58, 17)
+    UI.modeButton:SetPoint("TOPRIGHT", UI, "TOPRIGHT", -7, -3)
+    UI.modeText = UI.modeButton:CreateFontString(nil, "OVERLAY", "GameFontNormalSmall")
+    UI.modeText:SetAllPoints()
+    UI.modeText:SetJustifyH("RIGHT")
+    UI.modeText:SetTextColor(0.72, 0.72, 0.75)
+    UI.modeButton:SetFontString(UI.modeText)
     UI.modeButton:SetText(db.view == "overall" and "Overall" or "Current")
+    UI.modeButton:SetScript("OnEnter", function() UI.modeText:SetTextColor(1.0, 0.87, 0.42) end)
+    UI.modeButton:SetScript("OnLeave", function() UI.modeText:SetTextColor(0.72, 0.72, 0.75) end)
     UI.modeButton:SetScript("OnClick", function()
         local currentDB = DB()
         currentDB.view = currentDB.view == "overall" and "current" or "overall"
@@ -263,10 +272,17 @@ local function CreateUI()
     end)
 
     UI.footer = UI:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
-    UI.footer:SetPoint("BOTTOMLEFT", UI, "BOTTOMLEFT", 9, 8)
-    UI.footer:SetPoint("BOTTOMRIGHT", UI, "BOTTOMRIGHT", -9, 8)
-    UI.footer:SetJustifyH("CENTER")
-    UI.footer:SetText("Waiting for combat")
+    UI.footer:SetPoint("BOTTOMLEFT", UI, "BOTTOMLEFT", 9, 6)
+    UI.footer:SetPoint("BOTTOMRIGHT", UI, "BOTTOMRIGHT", -9, 6)
+    UI.footer:SetJustifyH("LEFT")
+    UI.footer:SetTextColor(0.75, 0.75, 0.78)
+    UI.footer:SetText("")
+    UI.footer:Hide()
+
+    UI.empty = UI:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+    UI.empty:SetPoint("TOPLEFT", UI, "TOPLEFT", 9, -31)
+    UI.empty:SetTextColor(0.68, 0.68, 0.72)
+    UI.empty:SetText("Waiting for combat")
 
     for i = 1, MAX_ROWS do
         rows[i] = CreateRow(UI, i)
@@ -279,20 +295,29 @@ local function CreateUI()
     end
 end
 
-local function SetFrameHeight(rowCount)
+local function SetFrameHeight(rowCount, hasFooter)
     if not UI then return end
     local count = math.max(1, rowCount)
-    UI:SetHeight(64 + (count * 23))
+    UI:SetHeight(34 + (count * 21) + (hasFooter and 17 or 0))
 end
 
-local function UpdateRow(row, source, actualRank, topSource, postCombat)
+local function UpdateRow(row, source, actualRank, topSource, postCombat, showRank)
     row.rank:SetText(actualRank .. ".")
+    row.rank:SetShown(showRank)
+    row.name:ClearAllPoints()
+    if showRank then
+        row.name:SetPoint("LEFT", row.rank, "RIGHT", 1, 0)
+    else
+        row.name:SetPoint("LEFT", row, "LEFT", 7, 0)
+    end
+    row.name:SetPoint("RIGHT", row, "RIGHT", -66, 0)
 
     SafeSetText(row.name, source.name)
 
     local r, g, b = ClassColor(source.classFilename)
-    row.bar:SetStatusBarColor(r, g, b, source.isLocalPlayer and 0.82 or 0.62)
-    row.name:SetTextColor(r, g, b)
+    row.bar:SetStatusBarColor(r, g, b, source.isLocalPlayer and 0.64 or 0.50)
+    -- Never paint class-colored text over the same class-colored bar.
+    row.name:SetTextColor(0.98, 0.98, 1.0)
     row.you:SetShown(source.isLocalPlayer == true)
 
     local dps = source.amountPerSecond
@@ -361,13 +386,16 @@ end
 
 local function SummaryText(summary, prefix)
     if not summary then return nil end
-    local text = string.format(
-        "#%d/%d - %s DPS - %d%% of #1",
-        summary.rank,
-        summary.count,
-        FormatInteger(summary.dps) or tostring(math.floor(summary.dps + 0.5)),
-        summary.percentOfLeader
-    )
+    local text
+    if summary.count <= 1 then
+        text = string.format("%s DPS (solo)",
+            FormatInteger(summary.dps) or tostring(math.floor(summary.dps + 0.5)))
+    else
+        text = string.format("#%d/%d - %s DPS - %d%% of #1",
+            summary.rank, summary.count,
+            FormatInteger(summary.dps) or tostring(math.floor(summary.dps + 0.5)),
+            summary.percentOfLeader)
+    end
     if prefix then
         return prefix .. text
     end
@@ -427,10 +455,13 @@ function FDPS:Refresh()
     end
 
     if #sources == 0 then
-        SetFrameHeight(1)
-        UI.footer:SetText("Waiting for combat")
+        SetFrameHeight(1, false)
+        UI.footer:Hide()
+        UI.empty:Show()
         return
     end
+
+    UI.empty:Hide()
 
     local topSource = sources[1]
     local postCombat = not inCombat
@@ -440,24 +471,31 @@ function FDPS:Refresh()
         if #sources > MAX_ROWS and source.isLocalPlayer and playerRank and playerRank > MAX_ROWS then
             actualRank = playerRank
         end
-        UpdateRow(rows[visibleIndex], source, actualRank, topSource, postCombat)
+        UpdateRow(rows[visibleIndex], source, actualRank, topSource, postCombat, #sources > 1)
     end
 
-    SetFrameHeight(#visibleSources)
+    -- With one damage source there is no meaningful rank or leader
+    -- percentage. Keep just the named DPS row and make the frame shorter.
+    local hasComparison = #sources > 1
+    SetFrameHeight(#visibleSources, hasComparison)
+    UI.footer:SetShown(hasComparison)
+    if not hasComparison then return end
 
     if playerRank then
         if postCombat then
             local summary = CalculateFightSummary(sources)
             if summary then
-                UI.footer:SetText("YOU: " .. SummaryText(summary))
+                UI.footer:SetText(string.format("YOU #%d/%d  •  %s DPS  •  %d%% of top",
+                    summary.rank, summary.count,
+                    FormatInteger(summary.dps) or "?", summary.percentOfLeader))
             else
-                UI.footer:SetText(string.format("YOU: #%d / %d", playerRank, #sources))
+                UI.footer:SetText(string.format("YOU #%d/%d", playerRank, #sources))
             end
         else
-            UI.footer:SetText(string.format("YOU: #%d / %d", playerRank, #sources))
+            UI.footer:SetText(string.format("YOU #%d/%d", playerRank, #sources))
         end
     else
-        UI.footer:SetText(string.format("%d players", #sources))
+        UI.footer:SetText(string.format("%d damage sources", #sources))
     end
 end
 
