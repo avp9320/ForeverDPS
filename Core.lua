@@ -102,20 +102,22 @@ local function GetSession(view)
     return session
 end
 
+-- C_DamageMeter can return secret combat data on Forever. If the client
+-- restricts iterating a session, fail quietly until the data is accessible.
 local function PlayerSources(session)
-    local out = {}
-    if not session or not session.combatSources then
-        return out
-    end
-
-    for _, source in ipairs(session.combatSources) do
-        local classFilename = source.classFilename
-        if source.isLocalPlayer or (classFilename and classFilename ~= "") then
-            out[#out + 1] = source
+    local ok, sources = pcall(function()
+        local out = {}
+        if not session or not session.combatSources then return out end
+        for _, source in ipairs(session.combatSources) do
+            local classFilename = source.classFilename
+            if source.isLocalPlayer or (classFilename and classFilename ~= "") then
+                out[#out + 1] = source
+            end
         end
-    end
-
-    return out
+        return out
+    end)
+    if not ok or type(sources) ~= "table" then return {} end
+    return sources
 end
 
 local function FindPlayerRank(sources)
