@@ -18,3 +18,8 @@ This is a release gate, not a claim of implementation. README claims and static 
 ## Status
 
 Pre-1.0. Features described in README may be implemented but are not accepted as verified here until tested. Avoid declaring v1.0 solely on version metadata.
+
+## Phase 1 implementation — encounter report lifecycle (2026-11-05)
+
+- [x] Clear the previous finished-fight summary when a new combat starts, and refuse `/fdps report` while combat is active or the delayed end-of-fight snapshot is pending (`Core.lua`, commit `a543e86`). Prevents manually broadcasting a stale previous encounter as the current one; default chat silence unchanged.
+- [ ] Exercise combat restart, manual report before the delayed snapshot, combat exit, and meter reset in the live client. Code inspected; no Lua harness or live-client evidence for this change.
