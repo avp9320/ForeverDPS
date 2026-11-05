@@ -10,8 +10,8 @@ This is a release gate, not a claim of implementation. README claims and static 
 
 ## Evidence
 
-- Code review: pending
-- Automated/static tests: pending
+- Code review: 2026-11-05 reviewed Core.lua combat lifecycle; guarded delayed post-fight reporting against combat restart, meter reset, and world transitions (commit 0c42da4). This is a code-level safeguard, not live-client verification.
+- Automated/static tests: pending; no WoW runtime available in this run. Verify delayed callback cancellation with rapid combat restart and meter reset in client.
 - Live WoW: Forever client verification: pending
 - Release ZIP and WoWUp installation: pending
 
