@@ -539,6 +539,12 @@ local function DebugStatus()
 end
 
 local function ManualReport()
+    -- The delayed post-combat snapshot is authoritative. Never send an old
+    -- encounter while a new fight is active or its snapshot is still pending.
+    if (UnitAffectingCombat and UnitAffectingCombat("player")) or pendingFightGeneration then
+        print("|cffd9b93eForever DPS:|r Wait for the current fight summary before reporting.")
+        return
+    end
     if not lastFightSummary then
         print("|cffd9b93eForever DPS:|r No finished fight to report yet.")
         return
@@ -671,6 +677,9 @@ FDPS:SetScript("OnEvent", function(self, event, ...)
     elseif event == "PLAYER_REGEN_DISABLED" then
         combatGeneration = combatGeneration + 1
         pendingFightGeneration = nil
+        -- A previous encounter must not remain reportable during the next fight.
+        lastFightSummary = nil
+        lastFightData = nil
         self:Refresh()
     elseif event == "PLAYER_IN_COMBAT_CHANGED" then
         self:Refresh()
