@@ -6,6 +6,8 @@ local rows = {}
 local MAX_ROWS = 10
 local lastFightSummary
 local lastFightData
+local combatGeneration = 0
+local pendingFightGeneration
 
 local SESSION_OVERALL = (Enum and Enum.DamageMeterSessionType and Enum.DamageMeterSessionType.Overall) or 0
 local SESSION_CURRENT = (Enum and Enum.DamageMeterSessionType and Enum.DamageMeterSessionType.Current) or 1
@@ -414,7 +416,15 @@ local function AnnounceChannel(setting)
 end
 
 local function HandleFightEnded()
+    -- Combat can restart, the meter can reset, or the player can leave the world
+    -- during the delay. Never announce a different encounter as the finished one.
+    local generation = combatGeneration
+    if pendingFightGeneration == generation then return end
+    pendingFightGeneration = generation
     C_Timer.After(0.6, function()
+        if pendingFightGeneration ~= generation or combatGeneration ~= generation then return end
+        pendingFightGeneration = nil
+        if UnitAffectingCombat and UnitAffectingCombat("player") then return end
         local session = GetSession("current")
         local sources = PlayerSources(session)
         local summary = CalculateFightSummary(sources)
@@ -658,17 +668,27 @@ FDPS:SetScript("OnEvent", function(self, event, ...)
         DB()
         CreateUI()
         self:Refresh()
-    elseif event == "PLAYER_REGEN_DISABLED" or event == "PLAYER_IN_COMBAT_CHANGED" then
+    elseif event == "PLAYER_REGEN_DISABLED" then
+        combatGeneration = combatGeneration + 1
+        pendingFightGeneration = nil
+        self:Refresh()
+    elseif event == "PLAYER_IN_COMBAT_CHANGED" then
         self:Refresh()
     elseif event == "PLAYER_REGEN_ENABLED" then
         HandleFightEnded()
     elseif event == "DAMAGE_METER_CURRENT_SESSION_UPDATED" or event == "DAMAGE_METER_COMBAT_SESSION_UPDATED" then
         self:Refresh()
     elseif event == "DAMAGE_METER_RESET" then
+        combatGeneration = combatGeneration + 1
+        pendingFightGeneration = nil
         lastFightSummary = nil
         lastFightData = nil
         self:Refresh()
-    elseif event == "GROUP_ROSTER_UPDATE" or event == "PLAYER_ENTERING_WORLD" then
+    elseif event == "PLAYER_ENTERING_WORLD" then
+        combatGeneration = combatGeneration + 1
+        pendingFightGeneration = nil
+        self:Refresh()
+    elseif event == "GROUP_ROSTER_UPDATE" then
         self:Refresh()
     end
 end)
